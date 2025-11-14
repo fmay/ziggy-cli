@@ -62,21 +62,27 @@ export class CliCore {
             throw new Error('No user name available');
         // Login
         const api = core.getApiClient();
-        const response = await api.auth.authLogin({
-            username: config.userName,
-            password: config.password,
-        });
-        if (!response.data.token) {
-            const msg = `Authorization failed for ${config?.apiUrl}:${config?.port} ${config?.userName}`;
-            consoleMsg(msg, ColorEnum.ERROR);
+        try {
+            const response = await api.auth.authLogin({
+                username: config.userName,
+                password: config.password,
+            });
+            if (!response.data.token) {
+                const msg = `Authorization failed for ${config?.apiUrl}:${config?.port} ${config?.userName}`;
+                consoleMsg(msg, ColorEnum.ERROR);
+                await savePackageConfig(config);
+                return false;
+            }
+            // Save the token to .zigggyrc.json
+            config.authToken = response.data.token;
             await savePackageConfig(config);
-            return false;
+            this.client = createApiClient(config);
+            return true;
         }
-        // Save the token to .zigggyrc.json
-        config.authToken = response.data.token;
-        await savePackageConfig(config);
-        this.client = createApiClient(config);
-        return true;
+        catch {
+            consoleMsg('Connection to server failed. Please check all authorization details.', ColorEnum.ERROR);
+            process.exit(1);
+        }
     }
     /**
      * Get a configured OpenAPI client instance
