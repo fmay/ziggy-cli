@@ -62,7 +62,6 @@ export function createPluginCreateCommand() {
             // Install dependencies
             const installSpinner = ora('Installing dependencies...').start();
             try {
-                await execAsync('npm link @ziggy/plugin-sdk', { cwd: pluginDir });
                 await execAsync('npm install', { cwd: pluginDir });
                 installSpinner.succeed('Dependencies installed');
             }
