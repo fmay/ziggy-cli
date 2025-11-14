@@ -1,0 +1,19 @@
+import { PluginManifest } from 'ziggy-sdk'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1 } from './blocks/{{BLOCK_NAME_LOWER}}-v1/{{BLOCK_NAME_LOWER}}.v1.definition.js'
+
+const plugin: PluginManifest = {
+  name: '{{PLUGIN_NAME}}',
+  version: '1.0.0',
+  description: '{{PLUGIN_DESCRIPTION}}',
+  author: '{{PLUGIN_AUTHOR}}',
+  blocks: [{{BLOCK_TYPE_PASCAL}}BlockV1],
+  collections: [
+    {
+      collectionName: '{{PLUGIN_NAME}} blocks',
+      collectionDescription: 'Blocks for {{PLUGIN_NAME}}',
+      blockIds: ['{{BLOCK_TYPE}}'],
+    },
+  ],
+}
+
+export default plugin

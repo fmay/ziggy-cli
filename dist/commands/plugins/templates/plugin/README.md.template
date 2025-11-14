@@ -1,0 +1,31 @@
+# {{PLUGIN_NAME}}
+
+{{PLUGIN_DESCRIPTION}}
+
+## Installation
+
+```bash
+npm install
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Development
+
+```bash
+# Watch server changes
+npm run dev
+
+# Watch client changes (in another terminal)
+npm run dev:client
+```
+
+## Register with Ziggy
+
+```bash
+ziggy register .
+```

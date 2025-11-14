@@ -1,0 +1,98 @@
+import {
+  BatchStackProps,
+  BlockExecutionProps,
+  formulateFatalError,
+  getBatchStackItem,
+  logMessage,
+  outgoingEdgeAssignment,
+  safeWaitForInputEdgeData,
+  shouldTerminateBatchHelper,
+} from '@ziggy/plugin-sdk'
+import axios from 'axios'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1Config } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+
+/**
+ * Server-side block execution function
+ * This is the handler that runs when the block executes in a flow
+ *
+ * See docs for a full list of helper functions
+ */
+export async function execute{{BLOCK_TYPE_PASCAL}}BlockV1(props: BlockExecutionProps): Promise<void> {
+  const { blockToExecute: block } = props
+  const config = block.data.config as {{BLOCK_TYPE_PASCAL}}BlockV1Config
+  let batchItem: BatchStackProps | null = null
+
+  // Get Axios client
+  // Axios is only required for this template example. Your method may require its own client for data fetching
+  const client = axios.create({
+    baseURL: `https://dummyjson.com/recipes`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!block) {
+    throw new Error('Block to execute is not defined')
+  }
+
+  const startTime = new Date()
+
+  try {
+    // Log message (optional, writes to log file)
+    logMessage(props, block, `Executing {{BLOCK_NAME}} block: ${config.name}`)
+
+    // Wait for the input edge to have data on it before proceeding
+    // This is important to ensure the rest of the Flow can continue executing if necessary
+    const inputEdge = await safeWaitForInputEdgeData(props, block.id, 'i0')
+
+    // Are we in batch mode? config.isBatch is just a regular block property, so not required
+    // If your block always operates in batch mode then remove the if statement
+    if (config.isBatch) {
+      batchItem = getBatchStackItem(props, block)
+    }
+
+    // This helper checks whether there is no more data or max iterations is reached
+    // You can replace this with a customised termination test if required
+    // in which case call terminateBatch(props, batchItem) then return if test is true
+    if (batchItem && shouldTerminateBatchHelper(props, batchItem, config.maxIterations)) return
+
+    // GET SOME DATA
+    // Replace this code as required
+    const limit = 10
+    const offset = batchItem ? batchItem.offset : 0
+    const response = await client.get(`?limit=${limit}&skip=${offset}`)
+    const outputData = response.data.recipes as unknown[]
+
+    // Update batch information
+    // batchItem.noMoreData = true should be set when you determine that there is no more data to fetch
+    // This code may need to be adapted to suit your pagination mode
+    // If using cursor based pagination, see documentation
+    if (batchItem) {
+      if (outputData.length < limit) batchItem.noMoreData = true
+      batchItem.offset += outputData.length
+    }
+
+    // Record execution time
+    block.data.executionTime = new Date().getTime() - startTime.getTime()
+
+    // Send data to the next block(s) via output edges
+    // This must be always called to allow Flow execution to continue
+    const outEdges = outgoingEdgeAssignment(
+      props,
+      block,
+      0, // Output edge index (0 = first output)
+      inputEdge ?? null,
+      outputData, // Your fetched data to send to next block
+      batchItem || undefined, // Add the block's batchItem. Undefined if your block can operate on non-batch mode
+    )
+
+    // Log execution time
+    props.logTime(props, block, inputEdge ? [inputEdge] : [], outEdges, block.data.executionTime)
+
+  } catch (error) {
+    if (error instanceof Error) {
+      formulateFatalError(props, block, error.stack || error.message)
+    } else {
+      formulateFatalError(props, block, String(error))
+    }  }
+}

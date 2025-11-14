@@ -1,0 +1,1 @@
+{"version":3,"file":"ziggyrc.js","sourceRoot":"","sources":["../../src/utils/ziggyrc.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAA;AAEvE;;GAEG;AACH,MAAM,CAAC,KAAK,UAAU,iBAAiB;IACrC,OAAO,MAAM,gBAAgB,EAAE,CAAA;AACjC,CAAC;AAED;;GAEG;AACH,MAAM,CAAC,KAAK,UAAU,iBAAiB,CAAC,MAAmB;IACzD,MAAM,gBAAgB,CAAC,MAAM,CAAC,CAAA;AAChC,CAAC"}

@@ -1,0 +1,60 @@
+import React, { useState } from 'react'
+import {
+  BlockComponentProps,
+  CheckboxWithLabel,
+  deepCopy,
+  LabelInputPairHorizontal,
+} from '@ziggy/plugin-sdk'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1Config } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+
+/**
+ * React component for the block UI
+ */
+export const {{BLOCK_TYPE_PASCAL}}BlockComponentV1: React.FC<BlockComponentProps> = ({
+  block,
+  nodeId,
+  flowApi,
+}) => {
+  const [config, setConfig] = useState<{{BLOCK_TYPE_PASCAL}}BlockV1Config>(block.config)
+
+  const save = (newConfig: BatcherBlockV1Config) => {
+    const blockCopy = deepCopy(block)
+    blockCopy.config = newConfig
+    setConfig(newConfig)
+    flowApi.updateBlock(nodeId, blockCopy)
+  }
+
+  return (
+    <div className="p-4">
+      <div className="flex flex-col gap-2">
+        <CheckboxWithLabel
+          label="Batch mode"
+          checked={config.isBatch}
+          onChange={() => save({ ...config, isBatch: !config.isBatch })}
+        />
+
+        {config.isBatch && (
+          <>
+            <LabelInputPairHorizontal
+              labelClassName="w-[150px]"
+              width={100}
+              type="number"
+              label="Batch Size"
+              value={config.batchSize.toString()}
+              onChange={txt => save({ ...config, batchSize: +txt })}
+            />
+
+            <LabelInputPairHorizontal
+              labelClassName="w-[150px]"
+              width={100}
+              type="number"
+              label="Max Iterations"
+              value={config.maxIterations.toString()}
+              onChange={txt => save({ ...config, maxIterations: +txt })}
+            />
+          </>
+        )}
+      </div>
+    </div>
+  )
+}

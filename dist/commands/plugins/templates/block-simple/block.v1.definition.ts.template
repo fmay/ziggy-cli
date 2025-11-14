@@ -1,0 +1,41 @@
+import { PluginBlockDefinition } from 'ziggy-sdk'
+import { MdExtension } from 'react-icons/md'
+import { Default{{BLOCK_TYPE_PASCAL}}BlockV1 } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+import { execute{{BLOCK_TYPE_PASCAL}}BlockV1 } from './{{BLOCK_NAME_LOWER}}.v1.server.js'
+import { {{BLOCK_TYPE_PASCAL}}BlockComponentV1 } from './{{BLOCK_NAME_LOWER}}.v1.block.js'
+
+export const {{BLOCK_TYPE_PASCAL}}BlockV1: PluginBlockDefinition = {
+  client: {
+    blockDefinition: {
+      block: Default{{BLOCK_TYPE_PASCAL}}BlockV1,
+      component: {{BLOCK_TYPE_PASCAL}}BlockComponentV1,
+      baseNodeType: null as any,
+    },
+    metadata: {
+      info: '{{BLOCK_DESCRIPTION}}',
+      helpFile: 'plugins/{{PLUGIN_NAME_SLUG}}/{{BLOCK_NAME_LOWER}}-block',
+      // Option 1: Use react-icons
+      icon: MdExtension,
+
+      // Option 2: Use a file-based icon (SVG, PNG, or JPG)
+      // Place your icon file in src/assets/ directory (e.g., src/assets/icon.svg)
+      // icon: {
+      //  type: 'file',
+      //  format: 'png',  // or 'png', 'jpg', 'jpeg'
+      //  path: 'myicon.png'
+      //}
+    },
+    aiInfo: {
+      summary: '{{BLOCK_DESCRIPTION}}',
+      description: '{{BLOCK_DESCRIPTION}}',
+      keyWords: ['{{BLOCK_NAME_LOWER}}'],
+      aiInfo: 'Use this block to {{BLOCK_DESCRIPTION_LOWER}}',
+      props: {
+        name: 'The name parameter',
+      },
+    },
+  },
+  server: {
+    execute: execute{{BLOCK_TYPE_PASCAL}}BlockV1,
+  },
+}

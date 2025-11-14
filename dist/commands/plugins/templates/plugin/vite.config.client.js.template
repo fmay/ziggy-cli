@@ -1,0 +1,64 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import { copyFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'fs'
+
+// Plugin to copy assets to dist/assets
+function copyAssetsPlugin() {
+  return {
+    name: 'copy-assets',
+    closeBundle() {
+      const assetsDir = path.resolve(__dirname, 'src/assets')
+      const distAssetsDir = path.resolve(__dirname, 'dist/assets')
+
+      if (existsSync(assetsDir)) {
+        // Create dist/assets if it doesn't exist
+        if (!existsSync(distAssetsDir)) {
+          mkdirSync(distAssetsDir, { recursive: true })
+        }
+
+        // Copy all files from src/assets to dist/assets
+        const copyRecursive = (srcDir, destDir) => {
+          const files = readdirSync(srcDir)
+          for (const file of files) {
+            const srcFile = path.join(srcDir, file)
+            const destFile = path.join(destDir, file)
+
+            if (statSync(srcFile).isDirectory()) {
+              if (!existsSync(destFile)) {
+                mkdirSync(destFile, { recursive: true })
+              }
+              copyRecursive(srcFile, destFile)
+            } else {
+              copyFileSync(srcFile, destFile)
+            }
+          }
+        }
+
+        copyRecursive(assetsDir, distAssetsDir)
+        console.log('✓ Assets copied to dist/assets')
+      }
+    }
+  }
+}
+
+export default defineConfig({
+  plugins: [react(), copyAssetsPlugin()],
+  build: {
+    lib: {
+      entry: path.resolve(__dirname, 'src/index.ts'),
+      formats: ['es'],
+      fileName: () => 'bundle.js'
+    },
+    rollupOptions: {
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        '@ziggy/plugin-sdk'
+      ]
+    },
+    outDir: 'dist/client',
+    emptyOutDir: false
+  }
+})

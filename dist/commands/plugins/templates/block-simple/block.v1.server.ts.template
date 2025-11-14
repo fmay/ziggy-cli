@@ -1,0 +1,48 @@
+import {
+  BlockExecutionProps,
+  formulateFatalError,
+  logMessage,
+  outgoingEdgeAssignment,
+  safeWaitForAllInputEdgeData,
+} from 'ziggy-sdk'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1Config } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+
+export async function execute{{BLOCK_TYPE_PASCAL}}BlockV1(props: BlockExecutionProps): Promise<void> {
+  const { blockToExecute: block } = props
+
+  if (!block) {
+    throw new Error('Block to execute is not defined')
+  }
+
+  const config = block.data.config as {{BLOCK_TYPE_PASCAL}}BlockV1Config
+  const startTime = new Date()
+
+  try {
+    logMessage(props, block, `Executing My Block block: ${config.name}`)
+
+    // Wait for all incoming edges to be populated
+    // Note that safeWaitForInputEdgeData() let's you wait for just one specific edge
+    const inputEdges = await safeWaitForAllInputEdgeData(props, block)
+    if (!inputEdges) throw new Error('No input edges for this block')
+
+    // Get the actual payload data
+    const inputData = inputEdges.map(edge => edge.payload)
+
+    // Get the data from the first input edge, if you're interested in it
+    const firstEdgeData = inputData[0]
+
+    // TODO: Implement your block logic here
+    const outputData = {
+      name: config.name,
+      timestamp: new Date().toISOString(),
+      // Anything else you might want to output to the outgoing edge
+    }
+
+    block.data.executionTime = new Date().getTime() - startTime.getTime()
+    const outEdges = outgoingEdgeAssignment(props, block, 0, inputEdges, outputData)
+
+    props.logTime(props, block, inputData ? [inputData] : [], outEdges, block.data.executionTime)
+  } catch (error: any) {
+    formulateFatalError(props, block, error.stack || error.message)
+  }
+}

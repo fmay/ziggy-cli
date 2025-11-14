@@ -1,0 +1,49 @@
+import {
+  BlockExecutionProps,
+  formulateFatalError,
+  getInputEdgeData,
+  logMessage,
+  outgoingEdgeAssignment,
+  validateConfig,
+} from '@ziggy/plugin-sdk'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1Config } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+
+export async function execute{{BLOCK_TYPE_PASCAL}}BlockV1(props: BlockExecutionProps): Promise<void> {
+  const { blockToExecute: block } = props
+
+  if (!block) {
+    throw new Error('Block to execute is not defined')
+  }
+
+  const config = block.data.config as {{BLOCK_TYPE_PASCAL}}BlockV1Config
+  const startTime = new Date()
+
+  try {
+    validateConfig(config, ['name'])
+    logMessage(props, block, `Executing {{BLOCK_NAME}} block: ${config.name}`)
+
+    const inputEdge = getInputEdgeData(props, block, 0)
+
+    // TODO: Implement your block logic here
+    const outputData = {
+      name: config.name,
+      timestamp: new Date().toISOString(),
+      // Add your output data here
+    }
+
+    block.data.executionTime = new Date().getTime() - startTime.getTime()
+
+    const outEdges = outgoingEdgeAssignment(
+      props,
+      block,
+      0,
+      inputEdge ?? null,
+      outputData,
+    )
+
+    props.logTime(props, block, inputEdge ? [inputEdge] : [], outEdges, block.data.executionTime)
+    logMessage(props, block, `{{BLOCK_NAME}} block completed successfully`)
+  } catch (error: any) {
+    formulateFatalError(props, block, error.stack || error.message)
+  }
+}

@@ -1,0 +1,28 @@
+import React, { useState } from 'react'
+import { BlockComponentProps, deepCopy, LabelInputPairHorizontal } from '@ziggy/plugin-sdk'
+import { {{BLOCK_TYPE_PASCAL}}BlockV1Config } from './{{BLOCK_NAME_LOWER}}.v1.config.js'
+
+export const {{BLOCK_TYPE_PASCAL}}BlockComponentV1: React.FC<BlockComponentProps> = ({ block, nodeId, flowApi }) => {
+  const [config, setConfig] = useState<{{BLOCK_TYPE_PASCAL}}BlockV1Config>(block.config)
+
+  const save = (newConfig: {{BLOCK_TYPE_PASCAL}}BlockV1Config) => {
+    const blockCopy = deepCopy(block)
+    blockCopy.config = newConfig
+    setConfig(newConfig)
+    flowApi.updateBlock(nodeId, blockCopy)
+  }
+
+  return (
+    <div className="p-4">
+      <div>
+        <LabelInputPairHorizontal
+          label="Name"
+          value={config.name}
+          onChange={txt => save({ ...config, name: txt })}
+        />
+      </div>
+
+      {/* Add more configuration fields here */}
+    </div>
+  )
+}

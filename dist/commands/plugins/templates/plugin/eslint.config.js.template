@@ -1,0 +1,74 @@
+import js from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import prettierConfig from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
+import importPlugin from 'eslint-plugin-import'
+import securityPlugin from 'eslint-plugin-security'
+import sonarjsPlugin from 'eslint-plugin-sonarjs'
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  prettierConfig,
+  {
+    plugins: {
+      prettier: prettierPlugin,
+      import: importPlugin,
+      security: securityPlugin,
+      sonarjs: sonarjsPlugin,
+    },
+    rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      'prefer-object-spread': 'error',
+      'prefer-template': 'error',
+      'no-console': 'off', // CLI needs console output
+      'arrow-body-style': ['error', 'as-needed'],
+      'prettier/prettier': 'off',
+      'import/no-unused-modules': ['error', 'off'],
+      'import/no-unresolved': ['error', { ignore: ['^@ziggy/'] }],
+      'security/detect-object-injection': 'off',
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        },
+      ],
+      // Turn off import/extensions - it doesn't work with .js imports for .ts files
+      // You'll need to manually ensure .js extensions are used in relative imports
+      'import/extensions': 'off',
+      // Disable SonarJS warnings
+      'sonarjs/no-useless-catch': 'off',
+      'sonarjs/prefer-immediate-return': 'off',
+    },
+    settings: {
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx'],
+      },
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: 'tsconfig.json',
+          extensions: ['.ts', '.tsx', '.js', '.jsx'],
+          extensionAlias: {
+            '.js': ['.js', '.ts', '.tsx'],
+            '.jsx': ['.jsx', '.tsx'],
+          },
+        },
+        node: {
+          extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        },
+      },
+    },
+  },
+)
