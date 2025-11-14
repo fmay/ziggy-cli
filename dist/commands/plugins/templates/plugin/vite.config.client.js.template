@@ -55,7 +55,7 @@ export default defineConfig({
         'react',
         'react-dom',
         'react/jsx-runtime',
-        '@ziggy/plugin-sdk'
+        'ziggy-sdk'
       ]
     },
     outDir: 'dist/client',
