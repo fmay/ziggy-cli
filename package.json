@@ -1,6 +1,6 @@
 {
   "name": "ziggy-cli",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "CLI tool for Ziggy plugin development",
   "type": "module",
   "main": "dist/index.js",
