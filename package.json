@@ -1,6 +1,6 @@
 {
   "name": "ziggy-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "CLI tool for Ziggy plugin development",
   "type": "module",
   "main": "dist/index.js",
@@ -23,13 +23,10 @@
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.12",
     "@napi-rs/keyring": "^1.2.0",
-    "openapi": "1.0.0",
+    "openapi": "file:./vendor/openapi",
     "ora": "^7.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "bundledDependencies": [
-    "openapi"
-  ]
+  }
 }

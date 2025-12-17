@@ -1,0 +1,31 @@
+{
+  "name": "openapi",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/Api.js",
+  "types": "./dist/Api.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/Api.d.ts",
+      "import": "./dist/Api.js"
+    },
+    "./Api": {
+      "types": "./dist/Api.d.ts",
+      "import": "./dist/Api.js"
+    },
+    "./Api.js": {
+      "types": "./dist/Api.d.ts",
+      "import": "./dist/Api.js"
+    },
+    "./Api.ts": "./Api.ts"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "22.18.0"
+  },
+  "scripts": {
+    "Build": "swagger-typescript-api -p ./swagger.yaml -o ./ --disableStrictSSL --silent --extract-enums",
+    "build": "tsc",
+    "postBuild": "yarn build"
+  }
+}
