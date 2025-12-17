@@ -5,8 +5,9 @@ export interface ZiggyConfig {
     authToken?: string;
     userName?: string;
     password?: string;
+    isPluginAuth?: boolean;
+    serverName?: string;
 }
-export declare const EmptyZiggyConfig: ZiggyConfig;
 export interface RegisterPluginRequest {
     type: 'local' | 'npm';
     source: string;
@@ -24,7 +25,3 @@ export interface RegisterPluginResponse {
  * Create API client
  */
 export declare function createApiClient(config: ZiggyConfig): AxiosInstance;
-/**
- * Register a plugin with the Ziggy server
- */
-export declare function registerPlugin(config: ZiggyConfig, request: RegisterPluginRequest): Promise<RegisterPluginResponse>;

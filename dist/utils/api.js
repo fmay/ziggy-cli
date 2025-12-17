@@ -1,8 +1,4 @@
 import axios from 'axios';
-export const EmptyZiggyConfig = {
-    apiUrl: '',
-    port: '',
-};
 /**
  * Create API client
  */
@@ -18,13 +14,5 @@ export function createApiClient(config) {
         client.defaults.headers.common['Authorization'] = `Bearer ${config.authToken}`;
     }
     return client;
-}
-/**
- * Register a plugin with the Ziggy server
- */
-export async function registerPlugin(config, request) {
-    const client = createApiClient(config);
-    const response = await client.post('/api/plugins/register', request);
-    return response.data;
 }
 //# sourceMappingURL=api.js.map

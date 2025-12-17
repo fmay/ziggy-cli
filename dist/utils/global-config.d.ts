@@ -6,7 +6,7 @@ export declare function getGlobalConfigDir(): string;
 /**
  * Get the path to the global Ziggy config file
  */
-export declare function getGlobalConfigPath(): string;
+export declare function getGlobalConfigPath(isPluginAuth: boolean): string;
 /**
  * Ensure the global config directory exists
  */

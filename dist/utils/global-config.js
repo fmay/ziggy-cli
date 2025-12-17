@@ -12,8 +12,8 @@ export function getGlobalConfigDir() {
 /**
  * Get the path to the global Ziggy config file
  */
-export function getGlobalConfigPath() {
-    return path.join(getGlobalConfigDir(), 'config.json');
+export function getGlobalConfigPath(isPluginAuth) {
+    return path.join(getGlobalConfigDir(), isPluginAuth ? 'config.json' : 'zinstances.json');
 }
 /**
  * Ensure the global config directory exists
@@ -27,8 +27,8 @@ export function ensureGlobalConfigDir() {
 /**
  * Load the entire global configuration file
  */
-function loadGlobalConfig() {
-    const filePath = getGlobalConfigPath();
+function loadGlobalConfig(isPluginAuth) {
+    const filePath = getGlobalConfigPath(isPluginAuth);
     try {
         if (!existsSync(filePath)) {
             return {};
@@ -44,9 +44,9 @@ function loadGlobalConfig() {
 /**
  * Save the entire global configuration file
  */
-function saveGlobalConfig(config) {
+function saveGlobalConfig(config, isPluginAuth) {
     ensureGlobalConfigDir();
-    const filePath = getGlobalConfigPath();
+    const filePath = getGlobalConfigPath(isPluginAuth);
     writeFileSync(filePath, JSON.stringify(config, null, 2));
 }
 /**
@@ -69,7 +69,7 @@ export async function loadPluginConfig(pluginName) {
     try {
         // If no plugin name provided, get it from package.json
         const name = pluginName || getPluginName();
-        const globalConfig = loadGlobalConfig();
+        const globalConfig = loadGlobalConfig(true);
         const pluginConfig = globalConfig[name];
         if (!pluginConfig) {
             return null;
@@ -92,14 +92,16 @@ export async function loadPluginConfig(pluginName) {
  */
 export async function savePluginConfig(config, pluginName) {
     try {
-        // If no plugin name provided, get it from package.json
-        const name = pluginName || getPluginName();
+        // If pluginAuth and no plugin name provided, get it from package.json
+        let name;
+        if (config.isPluginAuth)
+            name = pluginName || getPluginName();
         if (!config.userName || !config.password) {
             consoleMsg('User name and password must both be present to save configuration');
             throw new Error('User name and password must both be present to save configuration');
         }
         // Load existing global config
-        const globalConfig = loadGlobalConfig();
+        const globalConfig = loadGlobalConfig(config.isPluginAuth);
         // Encrypt sensitive fields
         const encryptedConfig = {
             apiUrl: config.apiUrl,
@@ -109,9 +111,9 @@ export async function savePluginConfig(config, pluginName) {
             password: await encrypt(config.password),
         };
         // Update config for this plugin
-        globalConfig[name] = encryptedConfig;
+        globalConfig[config.isPluginAuth ? name : config.serverName] = encryptedConfig;
         // Save back to file
-        saveGlobalConfig(globalConfig);
+        saveGlobalConfig(globalConfig, config.isPluginAuth);
     }
     catch (error) {
         console.error('Error saving plugin config:', error.message);
