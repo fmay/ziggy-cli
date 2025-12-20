@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import { Command } from 'commander';
 import { core } from '../../index.js';
 import { getServerConfig } from './helpers/execute-helpers.js';
+import { confirmAction } from '../../utils/prompt.js';
 export function createFlowExportCommand() {
     return new Command('export')
         .description('Export flows to a JSON file')
@@ -9,6 +10,7 @@ export function createFlowExportCommand() {
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .option('-s, --server <server>', 'Server name from zinstances.json')
         .requiredOption('-sp, --save-path <path>', 'Absolute path where the exported file should be saved')
+        .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
         // Get flowUuids from either -f or --flowUuid
         const flowUuids = options.f || options.flowUuid || [];
@@ -18,6 +20,18 @@ export function createFlowExportCommand() {
         const serverName = options.s || options.server;
         // Get save path from either -sp or --save-path
         const savePath = options.sp || options.savePath;
+        // If not --no-prompt, prompt for confirmation
+        if (options.prompt !== false) {
+            const confirmed = await confirmAction('Are you sure you want to export the flow(s)?');
+            if (!confirmed) {
+                console.log(JSON.stringify({
+                    status: 200,
+                    statusText: 'OK',
+                    data: { message: 'Operation cancelled by user' },
+                }));
+                return;
+            }
+        }
         // Get server config and login
         const serverConfig = await getServerConfig(serverName);
         await core.loadConfig(serverConfig);

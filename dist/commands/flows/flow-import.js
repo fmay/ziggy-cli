@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import { Command } from 'commander';
 import { core } from '../../index.js';
 import { getServerConfig } from './helpers/execute-helpers.js';
+import { confirmAction } from '../../utils/prompt.js';
 export function createFlowImportCommand() {
     return new Command('import')
         .description('Import flows from a JSON file')
@@ -10,6 +11,7 @@ export function createFlowImportCommand() {
         .option('--skip', 'Skip flows that already exist (LEAVE duplicates mode)')
         .option('--duplicate', 'Rename duplicate flows (RENAME duplicates mode)')
         .option('--overwrite', 'Overwrite existing flows (OVERWRITE duplicates mode)')
+        .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
         // Get file path from either -fp or --file-path
         const filePath = options.fp || options.filePath;
@@ -60,6 +62,18 @@ export function createFlowImportCommand() {
         }
         else {
             duplicatesMode = 'OVERWRITE';
+        }
+        // If not --no-prompt, prompt for confirmation
+        if (options.prompt !== false) {
+            const confirmed = await confirmAction(`Are you sure you want to import flows from ${filePath}?`);
+            if (!confirmed) {
+                console.log(JSON.stringify({
+                    status: 200,
+                    statusText: 'OK',
+                    data: { message: 'Operation cancelled by user' },
+                }));
+                return;
+            }
         }
         try {
             // Get server config and login

@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import { ExecutionEnvironmentModeEnum } from 'openapi/Api.js';
 import { core } from '../../index.js';
 import { getServerConfig, parsePayload } from './helpers/execute-helpers.js';
+import { confirmAction } from '../../utils/prompt.js';
 export function createFlowExecuteCommand() {
     return new Command('execute')
         .description('Execute a flow')
@@ -12,6 +13,7 @@ export function createFlowExecuteCommand() {
         .option('-dnq, --do-not-queue', 'Execute immediately without queuing')
         .option('-s, --server <server>', 'Server name from zinstances.json')
         .option('--parallel', 'Execute flows in parallel')
+        .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
         // Get flowUuids from either -f or --flowUuid
         const flowUuids = options.f || options.flowUuid;
@@ -33,6 +35,18 @@ export function createFlowExecuteCommand() {
         const doNotQueue = options.dnq || options.doNotQueue || false;
         // Get server from either -s or --server
         const serverName = options.s || options.server;
+        // If not --no-prompt, prompt for confirmation
+        if (options.prompt !== false) {
+            const confirmed = await confirmAction('Are you sure you want to execute the flow(s)?');
+            if (!confirmed) {
+                console.log(JSON.stringify({
+                    status: 200,
+                    statusText: 'OK',
+                    data: { message: 'Operation cancelled by user' },
+                }));
+                return;
+            }
+        }
         // Get server config and login
         const serverConfig = await getServerConfig(serverName);
         await core.loadConfig(serverConfig);
