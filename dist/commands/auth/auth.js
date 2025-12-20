@@ -6,6 +6,7 @@ import { promptAuthCredentials } from '../../utils/auth-prompt.js';
 import { listConfigurations } from './helpers/list-configurations.js';
 import { createAuthUseCommand } from './auth-use.js';
 import { createAuthRemoveCommand } from './auth-remove.js';
+import { createAuthRenameCommand } from './auth-rename.js';
 /**
  * Create the auth command for authenticating with Ziggy servers or plugins
  */
@@ -87,6 +88,7 @@ export function createAuthCommand() {
     // Add subcommands
     auth.addCommand(createAuthUseCommand());
     auth.addCommand(createAuthRemoveCommand());
+    auth.addCommand(createAuthRenameCommand());
     return auth;
 }
 //# sourceMappingURL=auth.js.map
