@@ -151,7 +151,7 @@ export function createFlowExecuteCommand() {
             }
         }
         // Output all results as JSON array
-        console.log(JSON.stringify(results));
+        console.log(JSON.stringify(results, null, 2));
     });
 }
 //# sourceMappingURL=flow-execute.js.map

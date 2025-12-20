@@ -41,16 +41,23 @@ export function createFlowListCommand() {
         }
         // Calculate column width for UUID
         const uuidWidth = Math.max('Flow UUID'.length, ...flows.map(f => f.uuid.length));
+        // Calculate column width for Name
+        const nameWidth = Math.max('Flow Name'.length, ...flows.map(f => f.name.length));
         // Print header
+        console.log('');
         console.log(chalk.cyan('Flow UUID'.padEnd(uuidWidth + 2)) +
-            chalk.cyan('Flow Name'));
+            chalk.cyan('Flow Name'.padEnd(nameWidth + 2)) +
+            chalk.cyan('Tags'));
         // Print separator
         console.log('-'.repeat('Flow UUID'.length).padEnd(uuidWidth + 2) +
-            '-'.repeat('Flow Name'.length));
+            '-'.repeat('Flow Name'.length).padEnd(nameWidth + 2) +
+            '-'.repeat('Tags'.length));
         // Print each flow
         flows.forEach(flow => {
+            const tags = flow.tags && flow.tags.length > 0 ? flow.tags.join(', ') : '';
             console.log(flow.uuid.padEnd(uuidWidth + 2) +
-                flow.name);
+                flow.name.padEnd(nameWidth + 2) +
+                tags);
         });
         // Display summary
         console.log(chalk.gray(`\nTotal: ${flows.length} flow${flows.length !== 1 ? 's' : ''}\n`));
