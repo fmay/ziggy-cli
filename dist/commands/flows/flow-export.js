@@ -9,7 +9,7 @@ export function createFlowExportCommand() {
         .option('-f, --flow-ids <flowUuids...>', 'Space-separated list of flow UUIDs')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .requiredOption('-s, --server <server>', 'Server name from zinstances.json')
-        .requiredOption('-sp, --save-path <path>', 'Absolute path where the exported file should be saved')
+        .requiredOption('-fp, --file-path <path>', 'Absolute path and file name where the exported file should be saved')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
         // Get flowUuids from either -f or --flowUuid

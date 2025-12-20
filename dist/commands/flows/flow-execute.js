@@ -2,8 +2,8 @@ import { Command } from 'commander';
 import { v4 } from 'uuid';
 import { ExecutionEnvironmentModeEnum } from 'openapi/Api.js';
 import { core } from '../../index.js';
-import { getServerConfig, parsePayload } from './helpers/execute-helpers.js';
 import { confirmAction } from '../../utils/prompt.js';
+import { getServerConfig, parsePayload } from './helpers/execute-helpers.js';
 export function createFlowExecuteCommand() {
     return new Command('execute')
         .description('Execute a flow')
