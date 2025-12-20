@@ -11,7 +11,7 @@ export function createFlowExecuteCommand() {
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .option('-p, --payload <payload>', 'JSON payload string')
         .option('-dnq, --do-not-queue', 'Execute immediately without queuing')
-        .option('-s, --server <server>', 'Server name from zinstances.json')
+        .requiredOption('-s, --server <server>', 'Server name from zinstances.json')
         .option('--parallel', 'Execute flows in parallel')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {

@@ -7,7 +7,7 @@ export function createFlowImportCommand() {
     return new Command('import')
         .description('Import flows from a JSON file')
         .requiredOption('-fp, --file-path <path>', 'Path to the file to import')
-        .option('-s, --server <server>', 'Server name from zinstances.json')
+        .requiredOption('-s, --server <server>', 'Server name from zinstances.json')
         .option('--skip', 'Skip flows that already exist (LEAVE duplicates mode)')
         .option('--duplicate', 'Rename duplicate flows (RENAME duplicates mode)')
         .option('--overwrite', 'Overwrite existing flows (OVERWRITE duplicates mode)')
