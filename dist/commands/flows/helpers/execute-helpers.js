@@ -15,6 +15,7 @@ export async function getServerConfig(serverName) {
             process.exit(1);
         }
         let serverConfig = null;
+        let actualServerName;
         if (serverName) {
             // Use specified server
             serverConfig = globalConfig[serverName];
@@ -22,6 +23,7 @@ export async function getServerConfig(serverName) {
                 consoleMsg(`Server "${serverName}" not found in zinstances.json`, ColorEnum.ERROR);
                 process.exit(1);
             }
+            actualServerName = serverName;
         }
         else {
             // Find server with isUsed flag
@@ -31,6 +33,7 @@ export async function getServerConfig(serverName) {
                 process.exit(1);
             }
             serverConfig = globalConfig[usedServerName];
+            actualServerName = usedServerName;
         }
         // Decrypt sensitive fields
         return {
@@ -39,6 +42,8 @@ export async function getServerConfig(serverName) {
             authToken: serverConfig.authToken ? await decrypt(serverConfig.authToken) : '',
             userName: serverConfig.userName ? await decrypt(serverConfig.userName) : '',
             password: serverConfig.password ? await decrypt(serverConfig.password) : '',
+            serverName: actualServerName,
+            isPluginAuth: false,
         };
     }
     catch (error) {
