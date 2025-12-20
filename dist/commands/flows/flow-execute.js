@@ -7,7 +7,7 @@ import { getServerConfig, parsePayload } from './helpers/execute-helpers.js';
 export function createFlowExecuteCommand() {
     return new Command('execute')
         .description('Execute a flow')
-        .option('-f, --flow-ids <flowUuids...>', 'Space-separated list of flow UUIDs')
+        .option('-f, --flow-ids <flowIds...>', 'Space-separated list of flow IDs')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .option('-p, --payload <payload>', 'JSON payload string')
         .option('-dnq, --do-not-queue', 'Execute immediately without queuing')
@@ -15,8 +15,8 @@ export function createFlowExecuteCommand() {
         .option('--parallel', 'Execute flows in parallel')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
-        // Get flowUuids from either -f or --flowUuid
-        const flowUuids = options.f || options.flowUuid;
+        // Get flowIds from either -f or --flow-ids
+        const flowUuids = options.f || options.flowIds;
         // Get tags from either -t or --tags
         const tags = options.t || options.tags;
         // Validate that at least one of flowUuids or tags is specified
@@ -24,7 +24,7 @@ export function createFlowExecuteCommand() {
             console.log(JSON.stringify({
                 status: 400,
                 statusText: 'Bad Request',
-                data: { message: 'Error: At least one of -f (flowUuids) or -t (tags) is required' },
+                data: { message: 'Error: At least one of -f (flow-ids) or -t (tags) is required' },
             }));
             process.exit(1);
         }
