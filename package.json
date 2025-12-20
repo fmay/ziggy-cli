@@ -1,6 +1,6 @@
 {
   "name": "ziggy-cli",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "CLI tool for Ziggy plugin development",
   "type": "module",
   "main": "dist/index.js",
@@ -16,13 +16,14 @@
   "author": "Ziggy Services",
   "license": "MIT",
   "dependencies": {
+    "@napi-rs/keyring": "^1.2.0",
     "axios": "^1.6.2",
     "chalk": "^5.3.0",
     "cli-table3": "^0.6.5",
     "commander": "^11.1.0",
+    "formdata-node": "^6.0.3",
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.12",
-    "@napi-rs/keyring": "^1.2.0",
     "openapi": "file:./vendor/openapi",
     "ora": "^7.0.1"
   },

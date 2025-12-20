@@ -17,7 +17,7 @@ export function printTable(entries, firstColumnHeader) {
     console.log(separator);
     // Print rows
     entries.forEach(([name, config]) => {
-        const row = `${name.padEnd(nameWidth)}  ${config.apiUrl.padEnd(urlWidth)}  ${config.port.padEnd(portWidth)}`;
+        const row = `${name.padEnd(nameWidth)}  ${config.apiUrl.padEnd(urlWidth)}  ${String(config.port).padEnd(portWidth)}`;
         console.log(row);
     });
 }

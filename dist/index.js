@@ -7,6 +7,7 @@ import { createAuthCommand } from './commands/auth/auth.js';
 import { CliCore } from './utils/cli-core.class.js';
 import { createPluginCommand } from './commands/plugins/_plugin.js';
 import { createFlowCommand } from './commands/flows/_flow.js';
+import { createSystemCommand } from './commands/system/system.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Get cli class
@@ -22,6 +23,7 @@ program
 program.addCommand(createAuthCommand());
 program.addCommand(createPluginCommand());
 program.addCommand(createFlowCommand());
+program.addCommand(createSystemCommand());
 // Parse arguments
 program.parse(process.argv);
 //# sourceMappingURL=index.js.map

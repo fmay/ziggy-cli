@@ -38,6 +38,12 @@ export var ExecutionEnvironmentModeEnum;
     ExecutionEnvironmentModeEnum["DEV"] = "DEV";
     ExecutionEnvironmentModeEnum["PROD"] = "PROD";
 })(ExecutionEnvironmentModeEnum || (ExecutionEnvironmentModeEnum = {}));
+export var ImportDuplicatesEnum;
+(function (ImportDuplicatesEnum) {
+    ImportDuplicatesEnum["LEAVE"] = "LEAVE";
+    ImportDuplicatesEnum["OVERWRITE"] = "OVERWRITE";
+    ImportDuplicatesEnum["RENAME"] = "RENAME";
+})(ImportDuplicatesEnum || (ImportDuplicatesEnum = {}));
 export var StoreFindDtoMode;
 (function (StoreFindDtoMode) {
     StoreFindDtoMode["DATA"] = "DATA";
@@ -222,12 +228,6 @@ export var AlertTypeEnum;
     AlertTypeEnum["EXECUTION_TIMEOUT"] = "EXECUTION_TIMEOUT";
     AlertTypeEnum["SYSTEM"] = "SYSTEM";
 })(AlertTypeEnum || (AlertTypeEnum = {}));
-export var ImportDuplicatesEnum;
-(function (ImportDuplicatesEnum) {
-    ImportDuplicatesEnum["LEAVE"] = "LEAVE";
-    ImportDuplicatesEnum["OVERWRITE"] = "OVERWRITE";
-    ImportDuplicatesEnum["RENAME"] = "RENAME";
-})(ImportDuplicatesEnum || (ImportDuplicatesEnum = {}));
 export var MessagingTypeEnum;
 (function (MessagingTypeEnum) {
     MessagingTypeEnum["MQTTAWS"] = "MQTT AWS";
@@ -295,6 +295,12 @@ export var BackupResponseDtoRemoteBackupStatus;
     BackupResponseDtoRemoteBackupStatus["Failed"] = "failed";
     BackupResponseDtoRemoteBackupStatus["NotConfigured"] = "not_configured";
 })(BackupResponseDtoRemoteBackupStatus || (BackupResponseDtoRemoteBackupStatus = {}));
+export var ProcessedItemDtoMatchMethod;
+(function (ProcessedItemDtoMatchMethod) {
+    ProcessedItemDtoMatchMethod["Uuid"] = "uuid";
+    ProcessedItemDtoMatchMethod["Name"] = "name";
+    ProcessedItemDtoMatchMethod["Unmatched"] = "unmatched";
+})(ProcessedItemDtoMatchMethod || (ProcessedItemDtoMatchMethod = {}));
 /**
  * Plugin type (npm package or local file)
  * @example "local"
@@ -2280,6 +2286,7 @@ export class Api extends HttpClient {
             method: 'POST',
             body: data,
             type: ContentType.FormData,
+            format: 'json',
             ...params,
         }),
         /**
@@ -3553,6 +3560,33 @@ export class Api extends HttpClient {
         messagingFetch: (params = {}) => this.request({
             path: `/messaging`,
             method: 'GET',
+            format: 'json',
+            ...params,
+        }),
+        /**
+         * No description
+         *
+         * @name MessagingGetLogFiles
+         * @summary Get all log file names
+         * @request GET:/messaging/log-files
+         */
+        messagingGetLogFiles: (params = {}) => this.request({
+            path: `/messaging/log-files`,
+            method: 'GET',
+            format: 'json',
+            ...params,
+        }),
+        /**
+         * No description
+         *
+         * @name MessagingGetLogFile
+         * @summary Get log file contents by file name
+         * @request GET:/messaging/log-file
+         */
+        messagingGetLogFile: (query, params = {}) => this.request({
+            path: `/messaging/log-file`,
+            method: 'GET',
+            query: query,
             format: 'json',
             ...params,
         }),

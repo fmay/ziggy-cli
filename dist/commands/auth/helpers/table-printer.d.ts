@@ -5,5 +5,5 @@
  */
 export declare function printTable(entries: [string, {
     apiUrl: string;
-    port: string;
+    port: string | number;
 }][], firstColumnHeader: string): void;

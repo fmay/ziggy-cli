@@ -79,7 +79,8 @@ export class CliCore {
             this.client = createApiClient(config);
             return true;
         }
-        catch {
+        catch (error) {
+            console.error(error);
             consoleMsg('Connection to server failed. Please check all authorization details.', ColorEnum.ERROR);
             process.exit(1);
         }

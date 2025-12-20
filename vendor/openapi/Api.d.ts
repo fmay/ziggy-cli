@@ -889,6 +889,27 @@ export interface CloneResponseDto {
 }
 export interface TaggedExportRequestDto {
     tags: string[];
+    flowUuids: string[];
+}
+export declare enum ImportDuplicatesEnum {
+    LEAVE = "LEAVE",
+    OVERWRITE = "OVERWRITE",
+    RENAME = "RENAME"
+}
+export interface ProcessedItemDto {
+    uuid: string;
+    name: string;
+    result: ImportDuplicatesEnum;
+    matchMethod: ProcessedItemDtoMatchMethod;
+    /** Whether the item was successfully processed */
+    isProcessed: boolean;
+    /** Error message if processing failed */
+    error?: string;
+}
+export interface FlowImportResponseDto {
+    flowsProcessed: ProcessedItemDto[];
+    connectionsProcessed: ProcessedItemDto[];
+    secretsProcessed: ProcessedItemDto[];
 }
 export interface ExternalUrlDto {
     url: string;
@@ -1452,6 +1473,8 @@ export interface CreateMessagingDto {
     name: string;
     type: CreateMessagingDtoType;
     config: object;
+    logMessages?: boolean | null;
+    isActive?: boolean | null;
     connectionUuid: string;
     topicFlows: object;
     status: CreateMessagingDtoStatus;
@@ -1462,6 +1485,8 @@ export interface Messaging {
     name: string;
     type: MessagingType;
     config: object;
+    logMessages: boolean | null;
+    isActive: boolean | null;
     connectionUuid: string;
     topicFlows: object;
     status: MessagingStatus;
@@ -1476,6 +1501,8 @@ export interface UpdateMessagingDto {
     name?: string;
     type?: UpdateMessagingDtoType;
     config?: object;
+    logMessages?: boolean | null;
+    isActive?: boolean | null;
     connectionUuid?: string;
     topicFlows?: object;
     status?: UpdateMessagingDtoStatus;
@@ -1754,11 +1781,6 @@ export declare enum AlertTypeEnum {
     EXECUTION_FATAL = "EXECUTION_FATAL",
     EXECUTION_TIMEOUT = "EXECUTION_TIMEOUT",
     SYSTEM = "SYSTEM"
-}
-export declare enum ImportDuplicatesEnum {
-    LEAVE = "LEAVE",
-    OVERWRITE = "OVERWRITE",
-    RENAME = "RENAME"
 }
 export declare enum MessagingTypeEnum {
     MQTTAWS = "MQTT AWS",
@@ -2063,6 +2085,11 @@ export declare enum BackupResponseDtoRemoteBackupStatus {
     Success = "success",
     Failed = "failed",
     NotConfigured = "not_configured"
+}
+export declare enum ProcessedItemDtoMatchMethod {
+    Uuid = "uuid",
+    Name = "name",
+    Unmatched = "unmatched"
 }
 /**
  * Plugin type (npm package or local file)
@@ -3316,7 +3343,7 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @summary Upload a file to import flows, connections and secrets (without secret values)
          * @request POST:/flow/import
          */
-        flowImport: (data: string, params?: RequestParams) => Promise<HttpResponse<void, any>>;
+        flowImport: (data: string, params?: RequestParams) => Promise<HttpResponse<FlowImportResponseDto, any>>;
         /**
          * No description
          *
@@ -4115,6 +4142,24 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
          * @request GET:/messaging
          */
         messagingFetch: (params?: RequestParams) => Promise<HttpResponse<Messaging[], any>>;
+        /**
+         * No description
+         *
+         * @name MessagingGetLogFiles
+         * @summary Get all log file names
+         * @request GET:/messaging/log-files
+         */
+        messagingGetLogFiles: (params?: RequestParams) => Promise<HttpResponse<string[], any>>;
+        /**
+         * No description
+         *
+         * @name MessagingGetLogFile
+         * @summary Get log file contents by file name
+         * @request GET:/messaging/log-file
+         */
+        messagingGetLogFile: (query: {
+            fileName: string;
+        }, params?: RequestParams) => Promise<HttpResponse<string, any>>;
         /**
          * No description
          *
