@@ -9,7 +9,7 @@ import { confirmAction } from '../../utils/prompt.js';
 export function createSystemBackupCommand() {
     return new Command('backup')
         .description('Backup system database')
-        .option('-s, --server <server>', 'Server name from zinstances.json')
+        .requiredOption('-s, --server <server>', 'Server name from zinstances.json')
         .requiredOption('-fp, --file-path <path>', 'Absolute path where the backup file should be saved')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
