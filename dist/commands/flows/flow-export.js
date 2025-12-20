@@ -6,7 +6,7 @@ import { confirmAction } from '../../utils/prompt.js';
 export function createFlowExportCommand() {
     return new Command('export')
         .description('Export flows to a JSON file')
-        .option('-f, --flowUuid <flowUuids...>', 'Space-separated list of flow UUIDs')
+        .option('-f, --flow-ids <flowUuids...>', 'Space-separated list of flow UUIDs')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .option('-s, --server <server>', 'Server name from zinstances.json')
         .requiredOption('-sp, --save-path <path>', 'Absolute path where the exported file should be saved')

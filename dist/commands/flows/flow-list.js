@@ -5,7 +5,7 @@ import { getServerConfig } from './helpers/execute-helpers.js';
 export function createFlowListCommand() {
     return new Command('list')
         .description('List all flows')
-        .option('-f, --flowids <flowids...>', 'Space-delimited list of flow UUIDs to filter')
+        .option('-f, --flow-ids <flowids...>', 'Space-delimited list of flow UUIDs to filter')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter')
         .option('-s, --server <server>', 'Server name from zinstances.json')
         .action(async (options) => {

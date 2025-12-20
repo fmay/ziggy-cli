@@ -7,7 +7,7 @@ import { confirmAction } from '../../utils/prompt.js';
 export function createFlowExecuteCommand() {
     return new Command('execute')
         .description('Execute a flow')
-        .option('-f, --flowUuid <flowUuids...>', 'Space-separated list of flow UUIDs')
+        .option('-f, --flow-ids <flowUuids...>', 'Space-separated list of flow UUIDs')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
         .option('-p, --payload <payload>', 'JSON payload string')
         .option('-dnq, --do-not-queue', 'Execute immediately without queuing')
