@@ -8,7 +8,7 @@ export function createFlowExportCommand() {
         .description('Export flows to a JSON file')
         .option('-f, --flow-ids <flowUuids...>', 'Space-separated list of flow UUIDs')
         .option('-t, --tags <tags...>', 'Space-separated list of tags to filter flows')
-        .option('-s, --server <server>', 'Server name from zinstances.json')
+        .requiredOption('-s, --server <server>', 'Server name from zinstances.json')
         .requiredOption('-sp, --save-path <path>', 'Absolute path where the exported file should be saved')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
