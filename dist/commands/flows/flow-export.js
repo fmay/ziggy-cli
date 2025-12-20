@@ -1,8 +1,8 @@
 import * as fs from 'node:fs';
 import { Command } from 'commander';
 import { core } from '../../index.js';
-import { getServerConfig } from './helpers/execute-helpers.js';
 import { confirmAction } from '../../utils/prompt.js';
+import { getServerConfig } from './helpers/execute-helpers.js';
 export function createFlowExportCommand() {
     return new Command('export')
         .description('Export flows to a JSON file')
@@ -19,7 +19,7 @@ export function createFlowExportCommand() {
         // Get server from either -s or --server
         const serverName = options.s || options.server;
         // Get save path from either -sp or --save-path
-        const savePath = options.sp || options.savePath;
+        const savePath = options.fp || options.filePath;
         // If not --no-prompt, prompt for confirmation
         if (options.prompt !== false) {
             const confirmed = await confirmAction('Are you sure you want to export the flow(s)?');
