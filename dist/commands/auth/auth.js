@@ -41,8 +41,22 @@ export function createAuthCommand() {
                 {
                     type: 'input',
                     name: 'serverName',
-                    message: 'Provide a friendly name for this server',
-                    validate: (input) => input.length > 3 ? true : 'Server name must be at least 4 characters',
+                    message: 'Provide a friendly name for this server. Alphanumeric characters only. Do not use spaces.',
+                    validate: (input) => {
+                        if (input.length < 4) {
+                            return 'Server name must be at least 4 characters';
+                        }
+                        if (/\s/.test(input)) {
+                            return 'Server name cannot contain spaces';
+                        }
+                        if (!/^[a-zA-Z0-9]+$/.test(input)) {
+                            return 'Server name must be alphanumeric only';
+                        }
+                        if (/^\d/.test(input)) {
+                            return 'Server name cannot start with a number';
+                        }
+                        return true;
+                    },
                 },
             ]);
             serverName = response.serverName;
