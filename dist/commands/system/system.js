@@ -6,7 +6,7 @@ import { createSystemReorgCommand } from './system-reorg.js';
  */
 export function createSystemCommand() {
     const system = new Command('system')
-        .description('System-level operations for Ziggy');
+        .description('System level operations');
     // Add subcommands
     system.addCommand(createSystemBackupCommand());
     system.addCommand(createSystemReorgCommand());

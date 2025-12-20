@@ -20,14 +20,20 @@ export function createAuthCommand() {
             return;
         }
         // Determine authentication type (server or plugin)
-        const { isPluginAuth } = await inquirer.prompt([
+        const { authType } = await inquirer.prompt([
             {
-                type: 'confirm',
-                name: 'isPluginAuth',
-                message: 'Are you authenticating for a plugin?',
-                default: false,
+                type: 'input',
+                name: 'authType',
+                message: 'Are you authenticating for a Plugin (P) or Server (S)?',
+                validate: (input) => {
+                    const normalized = input.toLowerCase().trim();
+                    return normalized === 'p' || normalized === 's'
+                        ? true
+                        : 'Please enter either P for Plugin or S for Server';
+                },
             },
         ]);
+        const isPluginAuth = authType.toLowerCase().trim() === 'p';
         // Get server name for non-plugin authentication
         let serverName;
         if (!isPluginAuth) {
