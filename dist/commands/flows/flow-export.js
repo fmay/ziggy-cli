@@ -12,8 +12,8 @@ export function createFlowExportCommand() {
         .requiredOption('-fp, --file-path <path>', 'Absolute path and file name where the exported file should be saved')
         .option('--no-prompt', 'Do not prompt for confirmation')
         .action(async (options) => {
-        // Get flowUuids from either -f or --flowUuid
-        const flowUuids = options.f || options.flowUuid || [];
+        // Get flowUuids from either -f or --flow-ids
+        const flowUuids = options.f || options.flowIds || [];
         // Get tags from either -t or --tags
         const tags = options.t || options.tags || [];
         // Get server from either -s or --server

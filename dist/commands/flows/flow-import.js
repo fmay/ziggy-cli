@@ -1,8 +1,8 @@
 import * as fs from 'node:fs';
 import { Command } from 'commander';
 import { core } from '../../index.js';
-import { getServerConfig } from './helpers/execute-helpers.js';
 import { confirmAction } from '../../utils/prompt.js';
+import { getServerConfig } from './helpers/execute-helpers.js';
 export function createFlowImportCommand() {
     return new Command('import')
         .description('Import flows from a JSON file')
@@ -65,7 +65,28 @@ export function createFlowImportCommand() {
         }
         // If not --no-prompt, prompt for confirmation
         if (options.prompt !== false) {
-            const confirmed = await confirmAction(`Are you sure you want to import flows from ${filePath}?`);
+            // Read the file to count the number of flows
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            let numFlows = 0;
+            try {
+                const parsedContent = JSON.parse(fileContent);
+                // Assuming the file contains an array of flows or an object with a flows property
+                if (Array.isArray(parsedContent)) {
+                    numFlows = parsedContent.length;
+                }
+                else if (parsedContent.flows && Array.isArray(parsedContent.flows)) {
+                    numFlows = parsedContent.flows.length;
+                }
+            }
+            catch (error) {
+                console.log(JSON.stringify({
+                    status: 400,
+                    statusText: 'Bad Request',
+                    data: { message: `Failed to parse file: ${error.message}` },
+                }));
+                process.exit(1);
+            }
+            const confirmed = await confirmAction(`You are about to import ${numFlows} flows into ${serverName}. Are you sure you want to proceed (y/n)?`);
             if (!confirmed) {
                 console.log(JSON.stringify({
                     status: 200,
