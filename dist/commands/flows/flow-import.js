@@ -12,6 +12,7 @@ export function createFlowImportCommand() {
         .option('--duplicate', 'Rename duplicate flows (RENAME duplicates mode)')
         .option('--overwrite', 'Overwrite existing flows (OVERWRITE duplicates mode)')
         .option('--no-prompt', 'Do not prompt for confirmation')
+        .option('--no-backup', 'Do not perform a backup before importing')
         .action(async (options) => {
         // Get file path from either -fp or --file-path
         const filePath = options.fp || options.filePath;
@@ -115,6 +116,8 @@ export function createFlowImportCommand() {
             formData.append('file', file);
             // Add the duplicatesMode field
             formData.append('duplicatesMode', duplicatesMode);
+            // Add the noBackup field
+            formData.append('noBackup', String(options.backup === false));
             // Get the API base URL
             const config = core.getConfig();
             if (!config) {
